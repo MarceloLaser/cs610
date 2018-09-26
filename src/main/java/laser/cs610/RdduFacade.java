@@ -1,0 +1,183 @@
+package laser.cs610;
+
+import laser.datastructures.soot.*;
+import laser.CompilerDirectives;
+import soot.ValueBox;
+import soot.Unit;
+import soot.toolkits.graph.ExceptionalUnitGraph;
+import java.util.*;
+import java.util.logging.Level;
+
+public class RdduFacade
+{
+  // <editor-fold> FIELDS ******************************************************
+  private Map<Integer, SootNode> _nodes;
+  private Set<String> _definitions;
+  private ExceptionalUnitGraph _sootCfg;
+  // </editor-fold> FIELDS *****************************************************
+
+  // <editor-fold> INITIALIZATION **********************************************
+  public RdduFacade(ExceptionalUnitGraph cfg)
+  {
+    _nodes = new HashMap<Integer, SootNode>();
+    _definitions = new HashSet<String>();
+    setSootCfg(cfg);
+    initialize();
+    while(compute());
+  }
+
+  public void initialize()
+  {
+    Iterator<Unit> iterator = _sootCfg.iterator();
+
+    while(iterator.hasNext())
+    {
+      Unit current = iterator.next();
+      addNode(current);
+      findSuccessors(current, _sootCfg);
+      findDefinitions(current);
+    }
+
+    iterator = _sootCfg.iterator();
+
+    while(iterator.hasNext())
+    {
+      findUses(iterator.next());
+    }
+  }
+  // </editor-fold> INITIALIZATION *********************************************
+
+  // <editor-fold> ACCESSORS ***************************************************
+  public boolean containsNode(Integer lineNumber)
+  {
+    return _nodes.containsKey(lineNumber);
+  }
+
+  public SootNode getNode(Integer lineNumber)
+  {
+    return _nodes.get(lineNumber);
+  }
+
+  public void addNode(Unit node)
+  {
+    int currentLineNumber = node.getJavaSourceStartLineNumber();
+    if(!containsNode(currentLineNumber))
+      _nodes.put(currentLineNumber, new SootNode(currentLineNumber));
+  }
+
+  public Set<SootNode> allNodes()
+  {
+    return new HashSet<SootNode>(_nodes.values());
+  }
+
+  public void setSootCfg(ExceptionalUnitGraph cfg)
+  {
+    _sootCfg = cfg;
+  }
+
+  public void addDefinition(String definitionValue)
+  {
+    _definitions.add(definitionValue);
+  }
+
+  public boolean containsDefinition(String definitionValue)
+  {
+    return _definitions.contains(definitionValue);
+  }
+  // </editor-fold> ACCESSORS **************************************************
+
+  // <editor-fold> COMPUTATION *************************************************
+  public boolean compute()
+  {
+    boolean change = false;
+    Queue<SootNode> computeQueue = new LinkedList<SootNode>();
+    Set<SootNode> computed = new HashSet<SootNode>();
+    SootNode current;
+
+    for(Unit u : _sootCfg.getHeads())
+      computeQueue.add(getNode(u.getJavaSourceStartLineNumber()));
+
+    while(computeQueue.size() > 0)
+    {
+      current = computeQueue.poll();
+      for(SootNode successor : current.getSuccessors().values())
+      {
+        if(!computed.contains(successor))
+          computeQueue.add(successor);
+      }
+
+      if(!change)
+        change = current.computeSets();
+      current.computeSets();
+      computed.add(current);
+    }
+
+    if(CompilerDirectives.DEBUG)
+    {
+      CompilerDirectives.log(Level.FINE, "Computation Step : " + change);
+    }
+
+    return change;
+  }
+
+  private void findSuccessors(Unit current, ExceptionalUnitGraph cfg)
+  {
+    int currentLineNumber = current.getJavaSourceStartLineNumber();
+    int successorLineNumber;
+    SootNode currentNode = getNode(currentLineNumber);
+    SootNode successorNode;
+
+    for(Unit successor : cfg.getUnexceptionalSuccsOf(current))
+    {
+      successorLineNumber = successor.getJavaSourceStartLineNumber();
+      if(successorLineNumber == currentLineNumber)
+        continue;
+      addNode(successor);
+
+      successorNode = getNode(successorLineNumber);
+      currentNode.addSuccessor(successorLineNumber, successorNode);
+      successorNode.addParent(currentLineNumber, currentNode);
+    }
+  }
+
+  private void findDefinitions(Unit current)
+  {
+    String definitionValue;
+    String localVariablePattern = "l[0-9]+";
+    int currentLineNumber = current.getJavaSourceStartLineNumber();
+
+    for(ValueBox definition : current.getDefBoxes())
+    {
+      definitionValue = definition.getValue().toString();
+      if(definitionValue.contains("stack") ||
+        definitionValue.matches(localVariablePattern))
+        continue;
+      getNode(currentLineNumber).addGen(definitionValue);
+      addDefinition(definitionValue);
+    }
+  }
+
+  private void findUses(Unit current)
+  {
+    String usageValue;
+    int currentLineNumber = current.getJavaSourceStartLineNumber();
+    for(ValueBox usage : current.getUseBoxes())
+    {
+      usageValue = usage.getValue().toString();
+      if(containsDefinition(usageValue))
+        getNode(currentLineNumber).addUse(usageValue);
+    }
+  }
+  // </editor-fold> COMPUTATION ************************************************
+
+  // <editor-fold> IO OPERATIONS ***********************************************
+  public String printNodes()
+  {
+    String result = "";
+    for(SootNode node : _nodes.values())
+      result += node.printNode();
+
+    return result;
+  }
+  // </editor-fold> IO OPERATIONS **********************************************
+}
