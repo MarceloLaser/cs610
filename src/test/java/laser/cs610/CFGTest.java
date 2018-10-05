@@ -1,13 +1,14 @@
 package laser.cs610;
 
-import org.junit.*;
 import java.util.Collection;
 import java.util.Arrays;
 import laser.CompilerDirectives;
+import laser.cs610.hw1.CFG;
 import soot.G;
 import java.io.File;
 import org.junit.runner.*;
 import org.junit.runners.*;
+import org.junit.*;
 
 @RunWith(Parameterized.class)
 public class CFGTest

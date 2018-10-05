@@ -1,12 +1,14 @@
-package laser.cs610;
+package laser.cs610.hw1;
 
 import java.util.Collection;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.File;
 import laser.datastructures.soot.*;
+import laser.cs610.*;
 
-public class CFG extends SootExtension
+public class CFG
+  extends SootExtension
 {
   // <editor-fold> FIELDS ******************************************************
   private String _outputGraphName;

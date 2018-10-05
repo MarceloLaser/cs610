@@ -1,4 +1,4 @@
-package laser.cs610;
+package laser.cs610.hw1;
 
 import java.util.HashSet;
 import java.util.Collection;
@@ -12,6 +12,7 @@ import soot.jimple.internal.*;
 import soot.jimple.*;
 import laser.datastructures.soot.*;
 import laser.CompilerDirectives;
+import laser.cs610.*;
 import com.google.common.collect.PeekingIterator;
 import com.google.common.collect.Iterators;
 

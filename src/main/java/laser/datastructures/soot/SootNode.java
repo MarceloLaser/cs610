@@ -162,10 +162,17 @@ public class SootNode
 
   public String printReachingDefinitions()
   {
-    String result = "Line " + _lineNumber + "\t";
+    String result;
+    if(_lineNumber == -1)
+      result = "Line entry\t";
+    else
+      result = "Line " + _lineNumber + "\t";
     for(Map.Entry<String,Integer> pair : getInSet().entrySet())
     {
-      result += "<" + pair.getKey() + ", " + pair.getValue() + ">\t";
+      if(pair.getValue() == -1)
+        result += "<" + pair.getKey() + ", entry>\t";
+      else
+        result += "<" + pair.getKey() + ", " + pair.getValue() + ">\t";
     }
     result += System.lineSeparator();
     return result;
@@ -178,7 +185,14 @@ public class SootNode
     for(String use : getUseSet())
     {
       int definitionLine = getInSet().get(use);
-      result += " " + definitionLine + ", " + use + " -> " + _lineNumber + ";";
+      if(definitionLine == -1)
+        result += " entry, " + use + " -> ";
+      else
+        result += " " + definitionLine + ", " + use + " -> ";
+      if(_lineNumber == -1)
+        result += "entry;";
+      else
+        result += _lineNumber + ";";
       result += System.lineSeparator();
     }
 

@@ -6,7 +6,7 @@ import soot.options.Options;
 import soot.util.Chain;
 import java.io.File;
 
-abstract class SootExtension
+public abstract class SootExtension
 {
   // <editor-fold> FIELDS ******************************************************
   protected SootClass _sc;

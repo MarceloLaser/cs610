@@ -1,4 +1,4 @@
-package laser.cs610;
+package laser.cs610.hw2;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -6,8 +6,10 @@ import java.io.File;
 import java.util.logging.Level;
 import laser.CompilerDirectives;
 import laser.datastructures.soot.*;
+import laser.cs610.*;
 
-public class RDDU extends SootExtension
+public class RDDU
+  extends SootExtension
 {
   // <editor-fold> FIELDS ******************************************************
   public final RdduFacade _controlUnit;
@@ -24,8 +26,6 @@ public class RDDU extends SootExtension
     _outputDUFile = duFileName;
     _outputRDFile = rdFileName;
     _controlUnit = new RdduFacade(_cfgSoot);
-    _usageInstructions = "Usage: java -jar hw2.jar <ClassToAnalyzeName> ";
-    _usageInstructions += "<OutputDUName> <OutputRDName> <SootClassPath>";
   }
   // </editor-fold> INITIALIZATION *********************************************
 
@@ -42,6 +42,9 @@ public class RDDU extends SootExtension
 
   private static RDDU unpackArguments(String[] args)
   {
+    _usageInstructions = "Usage: java -jar hw2.jar <ClassToAnalyzeName> ";
+    _usageInstructions += "<OutputDUName> <OutputRDName> <SootClassPath>";
+
     if(args.length < 4)
     {
       System.out.println(_usageInstructions);

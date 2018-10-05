@@ -1,11 +1,12 @@
 package laser.cs610;
 
-import org.junit.*;
 import java.util.Collection;
 import java.util.Arrays;
 import laser.CompilerDirectives;
+import laser.cs610.hw2.RDDU;
 import soot.G;
 import java.io.File;
+import org.junit.*;
 import org.junit.runner.*;
 import org.junit.runners.*;
 

@@ -1,4 +1,4 @@
-package laser.cs610;
+package laser.cs610.hw2;
 
 import laser.datastructures.soot.*;
 import laser.CompilerDirectives;
@@ -68,6 +68,11 @@ public class RdduFacade
   public Set<SootNode> allNodes()
   {
     return new HashSet<SootNode>(_nodes.values());
+  }
+
+  public Map<Integer, SootNode> nodesMap()
+  {
+    return new HashMap<Integer, SootNode>(_nodes);
   }
 
   public void setSootCfg(ExceptionalUnitGraph cfg)
