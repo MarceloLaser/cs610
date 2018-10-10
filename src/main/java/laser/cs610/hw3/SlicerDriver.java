@@ -1,10 +1,14 @@
 package laser.cs610.hw3;
 
-import java.util.Iterator;
 import soot.jimple.internal.JReturnVoidStmt;
 import soot.Unit;
 import java.util.Collection;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import laser.datastructures.soot.SootNode;
 import laser.datastructures.soot.SootTransition;
@@ -18,6 +22,7 @@ public class SlicerDriver
   private String _sliceVariable;
   private ExceptionalUnitGraph _sootCfg;
   private Map<Integer, SootNode> _pdg;
+  private Set<Integer> _slice;
   // </editor-fold> FIELDS *****************************************************
 
   // <editor-fold> INITIALIZATION **********************************************
@@ -27,7 +32,9 @@ public class SlicerDriver
     _sliceLine = sliceLine;
     _sliceVariable = sliceVariable;
     _sootCfg = sootCfg;
+    _slice = new HashSet<Integer>();
     buildPdg();
+    buildSlice();
   }
   // </editor-fold> INITIALIZATION *********************************************
 
@@ -47,6 +54,7 @@ public class SlicerDriver
         if(source.equals(node))
           continue;
         source._controlFlow.addTransition(node._lineNumber, use);
+        node._controlFlow.addBackwardTransition(source._lineNumber, use);
       }
 
       controlDependencies = node._advancedControlFlow.getControlDependencies();
@@ -54,10 +62,42 @@ public class SlicerDriver
       {
         controlDependency._controlFlow.addTransition
           (node._lineNumber, "Control");
+        node._controlFlow.addBackwardTransition
+          (controlDependency._lineNumber, "Control");
       }
       if(controlDependencies.isEmpty() && node._lineNumber != -1)
       {
         _pdg.get(-1)._controlFlow.addTransition(node._lineNumber, "Control");
+        node._controlFlow.addBackwardTransition(-1, "Control");
+      }
+    }
+  }
+
+  private void buildSlice()
+  {
+    _slice.add(_sliceLine);
+    Queue<SootNode> checkQueue = new LinkedList<SootNode>();
+    Set<SootNode> checked = new HashSet<SootNode>();
+    checked.add(_pdg.get(_sliceLine));
+    for(SootTransition transition :
+      _pdg.get(_sliceLine)._controlFlow.getBackwardTransitions())
+      if(transition._transitionLabel.equals("Control")
+        || transition._transitionLabel.equals(_sliceVariable))
+        checkQueue.add(_pdg.get(transition._targetLineNumber));
+
+    while(checkQueue.size() > 0)
+    {
+      SootNode current = checkQueue.poll();
+      if(current._lineNumber != -1)
+        _slice.add(current._lineNumber);
+      checked.add(current);
+      for(SootTransition transition :
+        current._controlFlow.getBackwardTransitions())
+      {
+        SootNode checking = _pdg.get(transition._targetLineNumber);
+        if(checked.contains(checking))
+          continue;
+        checkQueue.add(checking);
       }
     }
   }
@@ -115,7 +155,7 @@ public class SlicerDriver
           " -> " + transition._targetLineNumber + ";" + System.lineSeparator();
 
     pdg += "}" + System.lineSeparator();
-    EasyFilePrinter.PrintFile(outputName, pdg);
+    EasyFilePrinter.printFile(outputName, pdg);
   }
 
   public void printControlDependencies(String outputName)
@@ -135,7 +175,16 @@ public class SlicerDriver
     }
 
     cd += "}" + System.lineSeparator();
-    EasyFilePrinter.PrintFile(outputName, cd);
+    EasyFilePrinter.printFile(outputName, cd);
+  }
+
+  public void printSlice(String outputName)
+  {
+    String result = "";
+    for(Integer sourceLine : _slice)
+      result += sourceLine + "\t";
+    result += System.lineSeparator();
+    EasyFilePrinter.printFile(outputName, result);
   }
   // </editor-fold> DEBUG ******************************************************
 }

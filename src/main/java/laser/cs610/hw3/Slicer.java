@@ -30,6 +30,7 @@ public class Slicer
     Slicer slicer = unpackArguments(args);
     SlicerDriver driver = new SlicerDriver(slicer._sliceLine,
       slicer._sliceVariable, slicer._cfgSoot);
+    driver.printSlice(slicer._outputFile);
 
     if(CompilerDirectives.DEBUG)
     {

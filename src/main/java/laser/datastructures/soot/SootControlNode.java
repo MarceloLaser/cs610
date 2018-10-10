@@ -9,6 +9,7 @@ public class SootControlNode
 {
   // <editor-fold> FIELDS ******************************************************
   private Set<SootTransition> _transitions;
+  private Set<SootTransition> _backwardTransitions;
   private Map<Integer,SootNode> _successors;
   private Map<Integer,SootNode> _parents;
   // </editor-fold> FIELDS *****************************************************
@@ -17,6 +18,7 @@ public class SootControlNode
   public SootControlNode()
   {
     _transitions = new HashSet<SootTransition>();
+    _backwardTransitions = new HashSet<SootTransition>();
     _successors = new HashMap<Integer,SootNode>();
     _parents = new HashMap<Integer,SootNode>();
   }
@@ -36,6 +38,11 @@ public class SootControlNode
   public void addTransition(Integer targetLineNumber, String label)
   {
     _transitions.add(new SootTransition(targetLineNumber, label));
+  }
+
+  public void addBackwardTransition(Integer targetLineNumber, String label)
+  {
+    _backwardTransitions.add(new SootTransition(targetLineNumber, label));
   }
 
   public void addExit(SootNode exit)
@@ -62,6 +69,11 @@ public class SootControlNode
   public Set<SootTransition> getTransitions()
   {
     return new HashSet<SootTransition>(_transitions);
+  }
+
+  public Set<SootTransition> getBackwardTransitions()
+  {
+    return new HashSet<SootTransition>(_backwardTransitions);
   }
   // </editor-fold> ACCESSORS **************************************************
 }

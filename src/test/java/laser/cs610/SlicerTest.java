@@ -27,9 +27,9 @@ public class SlicerTest
       {
         { "csci610.cfg.samples.Subject1" },
         { "csci610.cfg.samples.Subject2" },
-        { "Example1" },
+        //{ "Example1" },
         { "SwitchInt" },
-        { "SwitchString" },
+        //{ "SwitchString" },
         { "SliceTest" }
       }
     );
@@ -58,8 +58,8 @@ public class SlicerTest
       + "SlicerTestResults" + File.separator + subject + "Slice.txt";
     String sootClassPath = System.getProperty("user.dir") + File.separator
       + "src" + File.separator + "test" + File.separator + "resources";
-    String sourceSliceLine = "5";
-    String sourceSliceVariable = "v";
+    String sourceSliceLine = "7";
+    String sourceSliceVariable = "i";
     String pdgFileName = "target" + File.separator
       + "SlicerTestResults" + File.separator + subject + "PDG.dotty";
     String cdFileName = "target" + File.separator

@@ -108,7 +108,7 @@
               <finalName>cs610-CFG</finalName>
     					<archive>
     						<manifest>
-    							<mainClass>laser.cs610.CFG</mainClass>
+    							<mainClass>laser.cs610.hw1.CFG</mainClass>
     						</manifest>
     					</archive>
     				</configuration>
@@ -126,7 +126,25 @@
               <finalName>cs610-RDDU</finalName>
     					<archive>
     						<manifest>
-    							<mainClass>laser.cs610.RDDU</mainClass>
+    							<mainClass>laser.cs610.hw2.RDDU</mainClass>
+    						</manifest>
+    					</archive>
+    				</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+          <execution>
+						<id>make-Slicer</id>
+            <configuration>
+    					<descriptorRefs>
+    						<descriptorRef>jar-with-dependencies</descriptorRef>
+    					</descriptorRefs>
+              <finalName>cs610-Slicer</finalName>
+    					<archive>
+    						<manifest>
+    							<mainClass>laser.cs610.hw3.Slicer</mainClass>
     						</manifest>
     					</archive>
     				</configuration>

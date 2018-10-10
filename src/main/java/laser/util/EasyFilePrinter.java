@@ -11,12 +11,12 @@ import java.io.File;
  */
 public class EasyFilePrinter
 {
-  public static void PrintFile(String path, String fileName, String content)
+  public static void printFile(String path, String fileName, String content)
   {
-    PrintFile(path + File.separator + fileName, content);
+    printFile(path + File.separator + fileName, content);
   }
 
-  public static void PrintFile(String fullName, String content)
+  public static void printFile(String fullName, String content)
   {
     File outputFile = new File(fullName);
     PrintWriter writer = initializeWriter(outputFile);
