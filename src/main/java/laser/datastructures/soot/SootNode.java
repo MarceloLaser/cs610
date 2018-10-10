@@ -1,5 +1,6 @@
 package laser.datastructures.soot;
 
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,12 @@ public class SootNode
   public final int _lineNumber;
   private Set<SootTransition> _transitions;
   private Set<String> _useSet;
+  private Set<SootNode> _dominatorSet;
+  private Set<SootNode> _postDominatorSet;
+  private Set<SootNode> _dominatedSet;
+  private Set<SootNode> _postDominatedSet;
+  private Set<SootNode> _dominanceFrontier;
+  private Set<SootNode> _controlDependencies;
   private Map<String,Integer> _genSet;
   private Map<String,Integer> _inSet;
   private Map<String,Integer> _outSet;
@@ -26,6 +33,12 @@ public class SootNode
     _lineNumber = lineNumber;
     _transitions = new HashSet<SootTransition>();
     _useSet = new HashSet<String>();
+    _dominatorSet = new HashSet<SootNode>();
+    _postDominatorSet = new HashSet<SootNode>();
+    _dominatedSet = new HashSet<SootNode>();
+    _postDominatedSet = new HashSet<SootNode>();
+    _dominanceFrontier = new HashSet<SootNode>();
+    _controlDependencies = new HashSet<SootNode>();
     _genSet = new HashMap<String,Integer>();
     _inSet = new HashMap<String,Integer>();
     _outSet = new HashMap<String,Integer>();
@@ -70,9 +83,53 @@ public class SootNode
     _transitions.add(new SootTransition(targetLineNumber, label));
   }
 
+  public void addDominated(SootNode dominated)
+  {
+    _dominatedSet.add(dominated);
+  }
+
+  public void addPostDominated(SootNode postDominated)
+  {
+    _postDominatedSet.add(postDominated);
+  }
+
+  public void addExit(SootNode exit)
+  {
+    if(_successors.isEmpty())
+      _successors.put(exit._lineNumber, exit);
+  }
+
   public void copyTransitions(SootNode node)
   {
     _transitions.addAll(node.getTransitions());
+  }
+
+  public void initializeDominators(Collection<SootNode> nodes)
+  {
+    if(this._lineNumber == -1)
+      _dominatorSet.add(this);
+    else
+      _dominatorSet.addAll(nodes);
+  }
+
+  public void initializePostDominators(Collection<SootNode> nodes)
+  {
+    if(this._lineNumber == -2)
+      _postDominatorSet.add(this);
+    else
+      _postDominatorSet.addAll(nodes);
+  }
+
+  public void forwardDominated()
+  {
+    for(SootNode dominator : _dominatorSet)
+      dominator.addDominated(this);
+  }
+
+  public void forwardPostDominated()
+  {
+    for(SootNode postDominator : _postDominatorSet)
+      postDominator.addPostDominated(this);
   }
 
   public Set<String> getUseSet()
@@ -109,6 +166,36 @@ public class SootNode
   {
     return new HashSet<SootTransition>(_transitions);
   }
+
+  public Set<SootNode> getDominators()
+  {
+    return new HashSet<SootNode>(_dominatorSet);
+  }
+
+  public Set<SootNode> getPostDominators()
+  {
+    return new HashSet<SootNode>(_postDominatorSet);
+  }
+
+  public Set<SootNode> getDominated()
+  {
+    return new HashSet<SootNode>(_dominatedSet);
+  }
+
+  public Set<SootNode> getPostDominated()
+  {
+    return new HashSet<SootNode>(_postDominatedSet);
+  }
+
+  public Set<SootNode> getDominanceFrontier()
+  {
+    return new HashSet<SootNode>(_dominanceFrontier);
+  }
+
+  public Set<SootNode> getControlDependencies()
+  {
+    return new HashSet<SootNode>(_controlDependencies);
+  }
   // </editor-fold> ACCESSORS **************************************************
 
   // <editor-fold> COMPUTATION *************************************************
@@ -141,6 +228,54 @@ public class SootNode
     }
 
     return outSet;
+  }
+
+  public boolean computeDominators(Collection<SootNode> nodes)
+  {
+    if(_lineNumber == -1)
+      return false;
+
+    Set<SootNode> resultingNodes = new HashSet<SootNode>(nodes);
+    Set<SootNode> oldDominators = new HashSet<SootNode>(_dominatorSet);
+
+    for(SootNode parent : _parents.values())
+      resultingNodes.retainAll(parent.getDominators());
+    _dominatorSet = new HashSet<SootNode>();
+    _dominatorSet.add(this);
+    _dominatorSet.addAll(resultingNodes);
+    return !_dominatorSet.equals(oldDominators);
+  }
+
+  public boolean computePostDominators(Collection<SootNode> nodes)
+  {
+    if(_lineNumber == -2)
+      return false;
+
+    Set<SootNode> resultingNodes = new HashSet<SootNode>(nodes);
+    Set<SootNode> oldPostDominators = new HashSet<SootNode>(_postDominatorSet);
+
+    for(SootNode child : _successors.values())
+      resultingNodes.retainAll(child.getPostDominators());
+    _postDominatorSet = new HashSet<SootNode>();
+    _postDominatorSet.add(this);
+    _postDominatorSet.addAll(resultingNodes);
+    return !_postDominatorSet.equals(oldPostDominators);
+  }
+
+  public void computeDominanceFrontiers()
+  {
+    for(SootNode dominated : _dominatedSet)
+      for(SootNode nodeToCheck : dominated.getSuccessors().values())
+        if(!_dominatedSet.contains(nodeToCheck))
+          _dominanceFrontier.add(nodeToCheck);
+  }
+
+  public void computeControlDependencies()
+  {
+    for(SootNode postDominated : _postDominatedSet)
+      for(SootNode nodeToCheck : postDominated.getParents().values())
+        if(!_postDominatedSet.contains(nodeToCheck))
+          _controlDependencies.add(nodeToCheck);
   }
   // </editor-fold> COMPUTATION ************************************************
 

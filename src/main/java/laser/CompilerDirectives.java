@@ -11,7 +11,7 @@ import java.util.logging.*;
 public class CompilerDirectives
 {
   // Assert true for debugging blocks.
-  public static final boolean DEBUG = false;
+  public static final boolean DEBUG = true;
   // Logger
   private static Logger LOGGER = null;
   public static final Level LEVEL = Level.INFO;

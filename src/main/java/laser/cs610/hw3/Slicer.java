@@ -1,5 +1,6 @@
 package laser.cs610.hw3;
 
+import laser.CompilerDirectives;
 import laser.cs610.SootExtension;
 
 public class Slicer
@@ -7,6 +8,8 @@ public class Slicer
 {
   // <editor-fold> FIELDS ******************************************************
   private String _outputFile;
+  private String _sliceVariable;
+  private Integer _sliceLine;
   private static String _usageInstructions;
   // </editor-fold> FIELDS *****************************************************
 
@@ -15,6 +18,8 @@ public class Slicer
     Integer sliceLine, String sliceVariable)
   {
     super(className, sootClassPathAppend);
+    _sliceLine = sliceLine;
+    _sliceVariable = sliceVariable;
     _outputFile = outputPath;
   }
   // </editor-fold> INITIALIZATION *********************************************
@@ -23,6 +28,13 @@ public class Slicer
   public static void main(String[] args)
   {
     Slicer slicer = unpackArguments(args);
+    SlicerDriver driver = new SlicerDriver(slicer._sliceLine,
+      slicer._sliceVariable, slicer._cfgSoot);
+
+    if(CompilerDirectives.DEBUG)
+    {
+      driver.printPDG(args[5]);
+    }
   }
 
   private static Slicer unpackArguments(String[] args)
