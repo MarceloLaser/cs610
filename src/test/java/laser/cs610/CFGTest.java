@@ -2,7 +2,8 @@ package laser.cs610;
 
 import java.util.Collection;
 import java.util.Arrays;
-import laser.CompilerDirectives;
+import laser.util.CompilerDirectives;
+import laser.util.EasyLogger;
 import laser.cs610.hw1.CFG;
 import soot.G;
 import java.io.File;
@@ -44,7 +45,7 @@ public class CFGTest
   public void testCFG()
   {
     new File("target" + File.separator + "CFGTestResults").mkdirs();
-    CompilerDirectives.initializeLogger("target" + File.separator
+    EasyLogger.initializeLogger("target" + File.separator
       + "CFGTestResults" + File.separator + _subject + "TestResults.txt");
     CFG.main(initializeSubject(_subject));
     assert(true);

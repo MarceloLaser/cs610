@@ -2,7 +2,8 @@ package laser.cs610;
 
 import java.util.Collection;
 import java.util.Arrays;
-import laser.CompilerDirectives;
+import laser.util.CompilerDirectives;
+import laser.util.EasyLogger;
 import laser.cs610.hw2.RDDU;
 import soot.G;
 import java.io.File;
@@ -44,7 +45,7 @@ public class RDDUTest
   public void testDataFlow()
   {
     new File("target" + File.separator + "DataFlowTestResults").mkdirs();
-    CompilerDirectives.initializeLogger("target" + File.separator
+    EasyLogger.initializeLogger("target" + File.separator
       + "DataFlowTestResults" + File.separator + _subject + "TestResults.txt");
     RDDU.main(initializeSubject(_subject));
     assert(true);

@@ -3,7 +3,8 @@ package laser.cs610;
 import laser.cs610.hw3.Slicer;
 import java.util.Collection;
 import java.util.Arrays;
-import laser.CompilerDirectives;
+import laser.util.CompilerDirectives;
+import laser.util.EasyLogger;
 import soot.G;
 import java.io.File;
 import org.junit.*;
@@ -44,7 +45,7 @@ public class SlicerTest
   public void testDataFlow()
   {
     new File("target" + File.separator + "SlicerTestResults").mkdirs();
-    CompilerDirectives.initializeLogger("target" + File.separator
+    EasyLogger.initializeLogger("target" + File.separator
       + "SlicerTestResults" + File.separator + _subject + "TestResults.txt");
     Slicer.main(initializeSubject(_subject));
     assert(true);

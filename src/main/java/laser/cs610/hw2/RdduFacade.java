@@ -1,7 +1,8 @@
 package laser.cs610.hw2;
 
 import laser.datastructures.soot.*;
-import laser.CompilerDirectives;
+import laser.util.CompilerDirectives;
+import laser.util.EasyLogger;
 import soot.ValueBox;
 import soot.Unit;
 import soot.toolkits.graph.ExceptionalUnitGraph;
@@ -95,6 +96,7 @@ public class RdduFacade
   public boolean compute()
   {
     boolean change = false;
+    Collection<SootNode> successors;
     Queue<SootNode> computeQueue = new LinkedList<SootNode>();
     Set<SootNode> computed = new HashSet<SootNode>();
     SootNode current;
@@ -105,7 +107,8 @@ public class RdduFacade
     while(computeQueue.size() > 0)
     {
       current = computeQueue.poll();
-      for(SootNode successor : current.getSuccessors().values())
+      successors = current._controlFlow.getSuccessors().values();
+      for(SootNode successor : successors)
       {
         if(!computed.contains(successor))
           computeQueue.add(successor);
@@ -119,7 +122,7 @@ public class RdduFacade
 
     if(CompilerDirectives.DEBUG)
     {
-      CompilerDirectives.log(Level.FINE, "Computation Step : " + change);
+      EasyLogger.log(Level.FINE, "Computation Step : " + change);
     }
 
     return change;
@@ -140,8 +143,8 @@ public class RdduFacade
       addNode(successor);
 
       successorNode = getNode(successorLineNumber);
-      currentNode.addSuccessor(successorLineNumber, successorNode);
-      successorNode.addParent(currentLineNumber, currentNode);
+      currentNode._controlFlow.addSuccessor(successorLineNumber, successorNode);
+      successorNode._controlFlow.addParent(currentLineNumber, currentNode);
     }
   }
 
@@ -157,7 +160,8 @@ public class RdduFacade
       if(definitionValue.contains("stack") ||
         definitionValue.matches(localVariablePattern))
         continue;
-      getNode(currentLineNumber).addGen(definitionValue);
+      getNode(currentLineNumber)._dataFlow
+        .addGen(definitionValue, currentLineNumber);
       addDefinition(definitionValue);
     }
   }
@@ -170,7 +174,7 @@ public class RdduFacade
     {
       usageValue = usage.getValue().toString();
       if(containsDefinition(usageValue))
-        getNode(currentLineNumber).addUse(usageValue);
+        getNode(currentLineNumber)._dataFlow.addUse(usageValue);
     }
   }
   // </editor-fold> COMPUTATION ************************************************

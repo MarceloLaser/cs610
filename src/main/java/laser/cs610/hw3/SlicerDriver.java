@@ -1,14 +1,12 @@
 package laser.cs610.hw3;
 
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Map;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import laser.datastructures.soot.SootNode;
 import laser.datastructures.soot.SootTransition;
 import laser.cs610.hw2.RdduFacade;
+import laser.util.EasyFilePrinter;
 
 public class SlicerDriver
 {
@@ -33,20 +31,22 @@ public class SlicerDriver
   // <editor-fold> COMPUTATION *************************************************
   private void buildPdg()
   {
+    Collection<SootNode> controlDependencies;
     _pdg = new RdduFacade(_sootCfg).nodesMap();
     createCDG();
 
     for(SootNode node : _pdg.values())
     {
-      for(String use : node.getUseSet())
+      for(String use : node._dataFlow.getUseSet())
       {
-        SootNode source = _pdg.get(node.getInSet().get(use));
-        source.addTransition(node._lineNumber, null);
+        SootNode source = _pdg.get(node._dataFlow.getInSet().get(use));
+        source._controlFlow.addTransition(node._lineNumber, null);
       }
 
-      for(SootNode controlDependency : node.getControlDependencies())
+      controlDependencies = node._advancedControlFlow.getControlDependencies();
+      for(SootNode controlDependency : controlDependencies)
       {
-        controlDependency.addTransition(node._lineNumber, null);
+        controlDependency._controlFlow.addTransition(node._lineNumber, null);
       }
     }
   }
@@ -59,59 +59,41 @@ public class SlicerDriver
 
     for(SootNode node : nodes)
     {
-      node.addExit(exit);
-      node.initializePostDominators(nodes);
+      node._controlFlow.addExit(exit);
+      node._advancedControlFlow.initializePostDominators(nodes, node);
     }
 
     while(changes)
     {
       changes = false;
       for(SootNode node : nodes)
-        changes = changes || node.computePostDominators(nodes);
+        changes = changes ||
+          node._advancedControlFlow.computePostDominators(nodes, node);
     }
 
     for(SootNode node : nodes)
-      node.forwardPostDominated();
+      node._advancedControlFlow.forwardPostDominated(node);
 
     for(SootNode node : nodes)
-      node.computeControlDependencies();
+      node._advancedControlFlow.computeControlDependencies();
   }
   // </editor-fold> COMPUTATION ************************************************
 
   // <editor-fold> DEBUG *******************************************************
   public void printPDG(String outputName)
   {
-    File pdgFile = new File(outputName);
-    PrintWriter writer = initializeWriter(pdgFile);
     String pdg = "";
-
     pdg += "digraph pdg {" + System.lineSeparator();
     pdg += " node [shape = rectangle];" + System.lineSeparator();
     pdg += System.lineSeparator();
 
     for(SootNode node : _pdg.values())
-      for(SootTransition transition : node.getTransitions())
+      for(SootTransition transition : node._controlFlow.getTransitions())
         pdg += " " + node._lineNumber + " -> "
           + transition._targetLineNumber + ";" + System.lineSeparator();
 
     pdg += "}" + System.lineSeparator();
-
-    writer.write(pdg);
-    writer.close();
-  }
-
-  private PrintWriter initializeWriter(File file)
-  {
-    PrintWriter writer = null;
-    try
-    {
-      writer = new PrintWriter(file);
-    }
-    catch(FileNotFoundException e)
-    {
-      e.printStackTrace();
-    }
-    return writer;
+    EasyFilePrinter.PrintFile(outputName, pdg);
   }
   // </editor-fold> DEBUG ******************************************************
 }

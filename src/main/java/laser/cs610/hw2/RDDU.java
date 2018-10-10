@@ -4,7 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.File;
 import java.util.logging.Level;
-import laser.CompilerDirectives;
+import laser.util.CompilerDirectives;
+import laser.util.EasyLogger;
 import laser.datastructures.soot.*;
 import laser.cs610.*;
 
@@ -35,7 +36,7 @@ public class RDDU
     RDDU rddu = unpackArguments(args);
 
     if(CompilerDirectives.DEBUG)
-      CompilerDirectives.log(Level.INFO, rddu._controlUnit.printNodes());
+      EasyLogger.log(Level.INFO, rddu._controlUnit.printNodes());
 
     rddu.serialize();
   }

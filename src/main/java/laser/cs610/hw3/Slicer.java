@@ -1,6 +1,6 @@
 package laser.cs610.hw3;
 
-import laser.CompilerDirectives;
+import laser.util.CompilerDirectives;
 import laser.cs610.SootExtension;
 
 public class Slicer

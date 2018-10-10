@@ -11,7 +11,8 @@ import soot.util.Chain;
 import soot.jimple.internal.*;
 import soot.jimple.*;
 import laser.datastructures.soot.*;
-import laser.CompilerDirectives;
+import laser.util.CompilerDirectives;
+import laser.util.EasyLogger;
 import laser.cs610.*;
 import com.google.common.collect.PeekingIterator;
 import com.google.common.collect.Iterators;
@@ -40,7 +41,7 @@ public class CfgFacade
     if(!containsNode(node._lineNumber))
       return _nodes.put(node._lineNumber, node);
     SootNode newNode = getNode(node._lineNumber);
-    newNode.copyTransitions(node);
+    newNode._controlFlow.copyTransitions(node);
     return newNode;
   }
 
@@ -61,7 +62,7 @@ public class CfgFacade
     Integer targetLineNumber, String label)
   {
     SootNode newNode = addNode(currentLineNumber);
-    newNode.addTransition(targetLineNumber,label);
+    newNode._controlFlow.addTransition(targetLineNumber,label);
     return newNode;
   }
 
@@ -136,15 +137,15 @@ public class CfgFacade
     {
       case JASSIGNSTMT:
         if(CompilerDirectives.DEBUG)
-          CompilerDirectives.log(Level.FINEST, "Skip JAssignStmt evaluation");
+          EasyLogger.log(Level.FINEST, "Skip JAssignStmt evaluation");
         break;
       case JIDENTITYSTMT:
         if(CompilerDirectives.DEBUG)
-          CompilerDirectives.log(Level.FINEST, "Skip JIdentityStmt evaluation");
+          EasyLogger.log(Level.FINEST, "Skip JIdentityStmt evaluation");
         break;
       case JINVOKESTMT:
         if(CompilerDirectives.DEBUG)
-          CompilerDirectives.log(Level.FINEST, "Skip JInvokeStmt evaluation");
+          EasyLogger.log(Level.FINEST, "Skip JInvokeStmt evaluation");
         break;
       case JIFSTMT:
         evaluateIfStmt((JIfStmt)u, next);
@@ -195,7 +196,7 @@ public class CfgFacade
       int currentLineNumber = u.getJavaSourceStartLineNumber();
       int targetLineNumber = u.getTargetBox()
         .getUnit().getJavaSourceStartLineNumber();
-      CompilerDirectives.log(Level.FINEST, currentLineNumber + " : " +
+      EasyLogger.log(Level.FINEST, currentLineNumber + " : " +
         targetLineNumber);
     }
   }
@@ -228,11 +229,13 @@ public class CfgFacade
   // <editor-fold> DEBUG *******************************************************
   private void logTransitions()
   {
+    Collection<SootTransition> transitions;
     for(SootNode node : _nodes.values())
     {
-      for(SootTransition transition : node.getTransitions())
+      transitions = node._controlFlow.getTransitions();
+      for(SootTransition transition : transitions)
       {
-        CompilerDirectives.log(Level.INFO, node._lineNumber + " : "
+        EasyLogger.log(Level.INFO, node._lineNumber + " : "
           + transition._targetLineNumber + " : "
           + transition._transitionLabel);
       }
@@ -241,14 +244,14 @@ public class CfgFacade
 
   private void logUnit(Unit u)
   {
-    CompilerDirectives.log(Level.INFO, u.getJavaSourceStartLineNumber() + " : "
+    EasyLogger.log(Level.INFO, u.getJavaSourceStartLineNumber() + " : "
       + u.branches() + " : " + u.getClass() + " : "
       + u.fallsThrough() + " : " + u.toString());
   }
 
   private void logNode(Unit source, Unit target, String label)
   {
-    CompilerDirectives.log(Level.FINE, source.getJavaSourceStartLineNumber()
+    EasyLogger.log(Level.FINE, source.getJavaSourceStartLineNumber()
       + " " + target.getJavaSourceStartLineNumber() + " " + label);
   }
   // </editor-fold> DEBUG ******************************************************

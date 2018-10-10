@@ -1,27 +1,23 @@
-package laser;
+package laser.util;
 
 import java.util.logging.*;
 
 /**
- * General purpose class used to control compile-time directives and logging.
+ * Logging Utility
  *
  * @author Marcelo Schmitt Laser
- * @version 0.3.1a
  */
-public class CompilerDirectives
+public class EasyLogger
 {
-  // Assert true for debugging blocks.
-  public static final boolean DEBUG = true;
-  // Logger
   private static Logger LOGGER = null;
   public static final Level LEVEL = Level.INFO;
 
   public static boolean initializeLogger(String logFile)
   {
-    CompilerDirectives.LOGGER = Logger.getLogger(logFile);
-
     if(CompilerDirectives.DEBUG)
     {
+      EasyLogger.LOGGER = Logger.getLogger(logFile);
+
       try
       {
         java.util.logging.Handler handler = new
@@ -38,8 +34,8 @@ public class CompilerDirectives
             }
           }
         );
-        CompilerDirectives.LOGGER.addHandler(handler);
-        CompilerDirectives.LOGGER.setLevel(CompilerDirectives.LEVEL);
+        EasyLogger.LOGGER.addHandler(handler);
+        EasyLogger.LOGGER.setLevel(EasyLogger.LEVEL);
         return true;
       }
       catch(Exception e)
@@ -54,7 +50,7 @@ public class CompilerDirectives
   {
     if(CompilerDirectives.DEBUG)
     {
-      CompilerDirectives.LOGGER.log(level, msg);
+      EasyLogger.LOGGER.log(level, msg);
       return true;
     }
     return false;

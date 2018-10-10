@@ -53,6 +53,7 @@ public class CFG
 
   public void serialize()
   {
+    Collection<SootTransition> transitions;
     File file = new File(_outputGraphName);
     PrintWriter writer = null;
     try
@@ -69,7 +70,8 @@ public class CFG
     writer.println("");
     for(SootNode node : _nodes)
     {
-      for(SootTransition transition : node.getTransitions())
+      transitions = node._controlFlow.getTransitions();
+      for(SootTransition transition : transitions)
       {
         if(node._lineNumber == transition._targetLineNumber)
           continue;
