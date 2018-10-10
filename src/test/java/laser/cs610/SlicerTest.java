@@ -3,7 +3,6 @@ package laser.cs610;
 import laser.cs610.hw3.Slicer;
 import java.util.Collection;
 import java.util.Arrays;
-import laser.util.CompilerDirectives;
 import laser.util.EasyLogger;
 import soot.G;
 import java.io.File;
@@ -30,7 +29,8 @@ public class SlicerTest
         { "csci610.cfg.samples.Subject2" },
         { "Example1" },
         { "SwitchInt" },
-        { "SwitchString" }
+        { "SwitchString" },
+        { "SliceTest" }
       }
     );
   }
@@ -62,7 +62,9 @@ public class SlicerTest
     String sourceSliceVariable = "v";
     String pdgFileName = "target" + File.separator
       + "SlicerTestResults" + File.separator + subject + "PDG.dotty";
+    String cdFileName = "target" + File.separator
+      + "SlicerTestResults" + File.separator + subject + "CD.dotty";
     return new String[]{sootClassPath, className, outputName,
-      sourceSliceLine, sourceSliceVariable, pdgFileName};
+      sourceSliceLine, sourceSliceVariable, pdgFileName, cdFileName};
   }
 }

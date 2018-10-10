@@ -1,5 +1,8 @@
 package laser.cs610.hw3;
 
+import java.util.Iterator;
+import soot.jimple.internal.JReturnVoidStmt;
+import soot.Unit;
 import java.util.Collection;
 import java.util.Map;
 import soot.toolkits.graph.ExceptionalUnitGraph;
@@ -33,6 +36,7 @@ public class SlicerDriver
   {
     Collection<SootNode> controlDependencies;
     _pdg = new RdduFacade(_sootCfg).nodesMap();
+    removeReturnVoidStmt();
     createCDG();
 
     for(SootNode node : _pdg.values())
@@ -40,13 +44,20 @@ public class SlicerDriver
       for(String use : node._dataFlow.getUseSet())
       {
         SootNode source = _pdg.get(node._dataFlow.getInSet().get(use));
-        source._controlFlow.addTransition(node._lineNumber, null);
+        if(source.equals(node))
+          continue;
+        source._controlFlow.addTransition(node._lineNumber, use);
       }
 
       controlDependencies = node._advancedControlFlow.getControlDependencies();
       for(SootNode controlDependency : controlDependencies)
       {
-        controlDependency._controlFlow.addTransition(node._lineNumber, null);
+        controlDependency._controlFlow.addTransition
+          (node._lineNumber, "Control");
+      }
+      if(controlDependencies.isEmpty() && node._lineNumber != -1)
+      {
+        _pdg.get(-1)._controlFlow.addTransition(node._lineNumber, "Control");
       }
     }
   }
@@ -77,6 +88,17 @@ public class SlicerDriver
     for(SootNode node : nodes)
       node._advancedControlFlow.computeControlDependencies();
   }
+
+  private void removeReturnVoidStmt()
+  {
+    Iterator<Unit> it = _sootCfg.iterator();
+    while(it.hasNext())
+    {
+      Unit u = it.next();
+      if(u instanceof JReturnVoidStmt)
+        _pdg.remove(u.getJavaSourceStartLineNumber());
+    }
+  }
   // </editor-fold> COMPUTATION ************************************************
 
   // <editor-fold> DEBUG *******************************************************
@@ -89,11 +111,31 @@ public class SlicerDriver
 
     for(SootNode node : _pdg.values())
       for(SootTransition transition : node._controlFlow.getTransitions())
-        pdg += " " + node._lineNumber + " -> "
-          + transition._targetLineNumber + ";" + System.lineSeparator();
+        pdg += " " + node._lineNumber + ", " + transition._transitionLabel +
+          " -> " + transition._targetLineNumber + ";" + System.lineSeparator();
 
     pdg += "}" + System.lineSeparator();
     EasyFilePrinter.PrintFile(outputName, pdg);
+  }
+
+  public void printControlDependencies(String outputName)
+  {
+    Collection<SootNode> dependencies;
+    String cd = "";
+    cd += "digraph pdg {" + System.lineSeparator();
+    cd += " node [shape = rectangle];" + System.lineSeparator();
+    cd += System.lineSeparator();
+
+    for(SootNode node : _pdg.values())
+    {
+      dependencies = node._advancedControlFlow.getControlDependencies();
+      for(SootNode dependency : dependencies)
+        cd += " " + node._lineNumber + " -> "
+          + dependency._lineNumber + ";" + System.lineSeparator();
+    }
+
+    cd += "}" + System.lineSeparator();
+    EasyFilePrinter.PrintFile(outputName, cd);
   }
   // </editor-fold> DEBUG ******************************************************
 }

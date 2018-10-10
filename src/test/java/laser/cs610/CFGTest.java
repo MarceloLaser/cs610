@@ -30,7 +30,8 @@ public class CFGTest
         { "csci610.cfg.samples.Subject2" },
         { "Example1" },
         { "SwitchInt" },
-        { "SwitchString" }
+        { "SwitchString" },
+        { "SliceTest" }
       }
     );
   }

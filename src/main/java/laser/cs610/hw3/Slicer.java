@@ -34,6 +34,7 @@ public class Slicer
     if(CompilerDirectives.DEBUG)
     {
       driver.printPDG(args[5]);
+      driver.printControlDependencies(args[6]);
     }
   }
 

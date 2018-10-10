@@ -155,7 +155,7 @@ public class SootAdvancedControlNode
     Collection<SootNode> parents;
     for(SootNode postDominated : _postDominatedSet)
     {
-      parents = postDominated._controlFlow.getSuccessors().values();
+      parents = postDominated._controlFlow.getParents().values();
       for(SootNode nodeToCheck : parents)
         if(!_postDominatedSet.contains(nodeToCheck))
           _controlDependencies.add(nodeToCheck);
