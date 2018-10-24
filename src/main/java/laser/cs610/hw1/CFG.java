@@ -21,7 +21,13 @@ public class CFG
   public CFG(String className, String outputGraphName,
     String sootClassPathAppend)
   {
-    super(className, sootClassPathAppend);
+    this(className, outputGraphName, sootClassPathAppend, "main");
+  }
+
+  public CFG(String className, String outputGraphName,
+    String sootClassPathAppend, String methodName)
+  {
+    super(className, sootClassPathAppend, methodName);
     _outputGraphName = outputGraphName;
     _controlUnit = new CfgFacade();
     _usageInstructions = "Usage: java -jar hw1.jar <ClassToAnalyzeName> ";
@@ -48,6 +54,8 @@ public class CFG
     String className = args[0];
     String outputGraphName = args[1];
     String sootClassPathAppend = args[2];
+    if(args.length == 4)
+      return new CFG(className, outputGraphName, sootClassPathAppend, args[3]);
     return new CFG(className, outputGraphName, sootClassPathAppend);
   }
 

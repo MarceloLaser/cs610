@@ -16,6 +16,7 @@ public class SootDataNode
   private Map<String,Integer> _genSet;
   private Map<String,Integer> _inSet;
   private Map<String,Integer> _outSet;
+  private Map<String,Integer> _constantsSet;
   // </editor-fold> FIELDS *****************************************************
 
   // <editor-fold> INITIALIZATION **********************************************
@@ -25,6 +26,7 @@ public class SootDataNode
     _genSet = new HashMap<String,Integer>();
     _inSet = new HashMap<String,Integer>();
     _outSet = new HashMap<String,Integer>();
+    _constantsSet = new HashMap<String,Integer>();
   }
   // </editor-fold> INITIALIZATION *********************************************
 
@@ -49,6 +51,11 @@ public class SootDataNode
     _outSet.put(out, lineNumber);
   }
 
+  public void addConstant(String constant, Integer value)
+  {
+    _constantsSet.put(constant, value);
+  }
+
   public Set<String> getUseSet()
   {
     return new HashSet<String>(_useSet);
@@ -67,6 +74,19 @@ public class SootDataNode
   public Map<String,Integer> getOutSet()
   {
     return new HashMap<String,Integer>(_outSet);
+  }
+
+  public Integer getConstant(String name)
+  {
+    if(CompilerDirectives.DEBUG)
+    {
+      if(_constantsSet.containsKey(name))
+        EasyLogger.log(Level.FINEST, "Constant " + name + " of value "
+          + _constantsSet.get(name) + " requested.");
+    }
+    if(_constantsSet.containsKey(name))
+      return _constantsSet.get(name);
+    return Integer.MAX_VALUE;
   }
   // </editor-fold> ACCESSORS **************************************************
 

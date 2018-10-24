@@ -1,12 +1,9 @@
 package laser.datastructures.soot;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.HashSet;
-import java.util.Set;
-import laser.util.CompilerDirectives;
+import com.microsoft.z3.BoolExpr;
 
 public class SootNode
 {
@@ -15,6 +12,7 @@ public class SootNode
   public final SootAdvancedControlNode _advancedControlFlow;
   public final SootControlNode _controlFlow;
   public final SootDataNode _dataFlow;
+  private List<BoolExpr> _pathCondition;
   // </editor-fold> FIELDS *****************************************************
 
   // <editor-fold> INITIALIZATION **********************************************
@@ -24,8 +22,21 @@ public class SootNode
     _advancedControlFlow = new SootAdvancedControlNode();
     _controlFlow = new SootControlNode();
     _dataFlow = new SootDataNode();
+    _pathCondition = new LinkedList<BoolExpr>();
   }
   // </editor-fold> INITIALIZATION *********************************************
+
+  // <editor-fold> ACCESSORS ***************************************************
+  public List<BoolExpr> getPathCondition()
+  {
+    return _pathCondition;
+  }
+
+  public void addPathCondition(BoolExpr pathCondition)
+  {
+    _pathCondition.add(pathCondition);
+  }
+  // </editor-fold> ACCESSORS **************************************************
 
   // <editor-fold> COMPUTATION *************************************************
   public boolean computeSets()

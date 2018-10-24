@@ -23,7 +23,13 @@ public class RDDU
   public RDDU(String className, String duFileName,
     String rdFileName, String sootClassPathAppend)
   {
-    super(className, sootClassPathAppend);
+    this(className, duFileName, rdFileName, sootClassPathAppend, "main");
+  }
+
+  public RDDU(String className, String duFileName,
+    String rdFileName, String sootClassPathAppend, String methodName)
+  {
+    super(className, sootClassPathAppend, methodName);
     _outputDUFile = duFileName;
     _outputRDFile = rdFileName;
     _controlUnit = new RdduFacade(_cfgSoot);
@@ -56,6 +62,9 @@ public class RDDU
     String duFileName = args[1];
     String rdFileName = args[2];
     String sootClassPathAppend = args[3];
+    if(args.length == 5)
+      return new RDDU(className, duFileName,
+        rdFileName, sootClassPathAppend, args[4]);
     return new RDDU(className, duFileName, rdFileName, sootClassPathAppend);
   }
 

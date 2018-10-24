@@ -1,5 +1,8 @@
 package laser.cs610;
 
+import laser.util.CompilerDirectives;
+import java.util.logging.Level;
+import laser.util.EasyLogger;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.*;
 import soot.options.Options;
@@ -17,12 +20,14 @@ public abstract class SootExtension
   // </editor-fold> FIELDS *****************************************************
 
   // <editor-fold> INITIALIZATION **********************************************
-  protected SootExtension(String className, String sootClassPathAppend)
+  protected SootExtension(String className, String sootClassPathAppend,
+    String methodName)
   {
-    initialize(className, sootClassPathAppend);
+    initialize(className, sootClassPathAppend, methodName);
   }
 
-  private void initialize(String className, String sootClassPathAppend)
+  private void initialize(String className, String sootClassPathAppend,
+    String methodName)
   {
     String sootClassPath = Scene.v().getSootClassPath();
     sootClassPath += File.pathSeparator + sootClassPathAppend;
@@ -33,10 +38,26 @@ public abstract class SootExtension
     _sc = Scene.v().loadClassAndSupport(className);
     Scene.v().loadNecessaryClasses();
     _sc.setApplicationClass();
-    _sm = _sc.getMethodByName("main");
+    _sm = _sc.getMethodByName(methodName);
     _b = _sm.retrieveActiveBody();
     _units = _b.getUnits();
     _cfgSoot = new ExceptionalUnitGraph(_b);
+    if(CompilerDirectives.DEBUG)
+    {
+      for(Unit u : _units)
+      {
+        logUnit(u);
+      }
+    }
   }
   // </editor-fold> INITIALIZATION *********************************************
+
+  // <editor-fold> DEBUG *******************************************************
+  private void logUnit(Unit u)
+  {
+    EasyLogger.log(Level.FINEST, u.getJavaSourceStartLineNumber() + " : "
+      + u.branches() + " : " + u.getClass() + " : "
+      + u.fallsThrough() + " : " + u.toString());
+  }
+  // </editor-fold> DEBUG ******************************************************
 }

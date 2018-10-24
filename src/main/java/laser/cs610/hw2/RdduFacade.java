@@ -1,5 +1,6 @@
 package laser.cs610.hw2;
 
+import soot.jimple.internal.JAssignStmt;
 import laser.datastructures.soot.*;
 import laser.util.CompilerDirectives;
 import laser.util.EasyLogger;
@@ -156,6 +157,10 @@ public class RdduFacade
 
     for(ValueBox definition : current.getDefBoxes())
     {
+      if(CompilerDirectives.DEBUG)
+      {
+        EasyLogger.log(Level.FINE, "Evaluating definition " + definition);
+      }
       definitionValue = definition.getValue().toString();
       if(definitionValue.contains("stack") ||
         definitionValue.matches(localVariablePattern))
@@ -163,6 +168,26 @@ public class RdduFacade
       getNode(currentLineNumber)._dataFlow
         .addGen(definitionValue, currentLineNumber);
       addDefinition(definitionValue);
+
+      if(current instanceof JAssignStmt)
+      {
+        JAssignStmt assignment = (JAssignStmt)current;
+        String assigned = assignment.rightBox.getValue().toString();
+
+        if(CompilerDirectives.DEBUG)
+        {
+          EasyLogger.log(Level.INFO, "Trying to save constant "
+            + definitionValue + " of value " + assigned);
+        }
+
+        try
+        {
+          Integer assignedValue = Integer.parseInt(assigned);
+          getNode(currentLineNumber)._dataFlow
+            .addConstant(definitionValue, assignedValue);
+        }
+        catch(NumberFormatException e) { };
+      }
     }
   }
 

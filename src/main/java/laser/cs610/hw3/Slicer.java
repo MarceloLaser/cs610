@@ -17,7 +17,14 @@ public class Slicer
   public Slicer(String sootClassPathAppend, String className, String outputPath,
     Integer sliceLine, String sliceVariable)
   {
-    super(className, sootClassPathAppend);
+    this(sootClassPathAppend, className, outputPath,
+      sliceLine, sliceVariable, "main");
+  }
+
+  public Slicer(String sootClassPathAppend, String className, String outputPath,
+    Integer sliceLine, String sliceVariable, String methodName)
+  {
+    super(className, sootClassPathAppend, methodName);
     _sliceLine = sliceLine;
     _sliceVariable = sliceVariable;
     _outputFile = outputPath;

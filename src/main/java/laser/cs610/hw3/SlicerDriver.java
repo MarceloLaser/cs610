@@ -1,9 +1,13 @@
 package laser.cs610.hw3;
 
+import java.util.logging.Level;
+import laser.util.EasyLogger;
+import laser.util.CompilerDirectives;
 import soot.jimple.internal.JReturnVoidStmt;
 import soot.Unit;
 import java.util.Collection;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Iterator;
@@ -36,20 +40,43 @@ public class SlicerDriver
     buildPdg();
     buildSlice();
   }
+
+  public SlicerDriver(ExceptionalUnitGraph sootCfg)
+  {
+    _sootCfg = sootCfg;
+    _slice = new HashSet<Integer>();
+    buildPdg();
+  }
   // </editor-fold> INITIALIZATION *********************************************
+
+  // <editor-fold> ACCESSORS ***************************************************
+  public Map<Integer, SootNode> getPdg()
+  {
+    return new HashMap<Integer, SootNode>(_pdg);
+  }
+  // </editor-fold> ACCESSORS **************************************************
 
   // <editor-fold> COMPUTATION *************************************************
   private void buildPdg()
   {
     Collection<SootNode> controlDependencies;
     _pdg = new RdduFacade(_sootCfg).nodesMap();
-    removeReturnVoidStmt();
+    //removeReturnVoidStmt();
     createCDG();
 
     for(SootNode node : _pdg.values())
     {
       for(String use : node._dataFlow.getUseSet())
       {
+        if(CompilerDirectives.DEBUG)
+        {
+          String toLog = "Looking at line " + node._lineNumber;
+          toLog += " for source of variable " + use;
+          toLog += ". Predecessors are: ";
+          for(SootNode pred : node._controlFlow.getParents().values())
+            toLog += pred._lineNumber + ",";
+          EasyLogger.log(Level.FINE, toLog);
+        }
         SootNode source = _pdg.get(node._dataFlow.getInSet().get(use));
         if(source.equals(node))
           continue;
