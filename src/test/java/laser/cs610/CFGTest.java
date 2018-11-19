@@ -2,7 +2,6 @@ package laser.cs610;
 
 import java.util.Collection;
 import java.util.Arrays;
-import laser.util.CompilerDirectives;
 import laser.util.EasyLogger;
 import laser.cs610.hw1.CFG;
 import soot.G;
@@ -31,7 +30,8 @@ public class CFGTest
         { "Example1" },
         { "SwitchInt" },
         { "SwitchString" },
-        { "SliceTest" }
+        { "SliceTest" },
+        { "InstrumentationTestFileButchered"}
       }
     );
   }
