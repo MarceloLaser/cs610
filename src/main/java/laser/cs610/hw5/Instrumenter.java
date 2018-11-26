@@ -59,7 +59,7 @@ public class Instrumenter
 		Local counterLocal = Jimple.v().newLocal("counterLocal", LongType.v());
 		_b.getLocals().add(counterLocal);
     AssignStmt declaration = Jimple.v().newAssignStmt(
-      counterLocal, LongConstant.v(1));
+      counterLocal, LongConstant.v(0));
     _units.insertAfter(declaration, _units.getFirst());
 
     return counterLocal;
