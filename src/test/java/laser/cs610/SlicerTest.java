@@ -14,10 +14,14 @@ import org.junit.runners.*;
 public class SlicerTest
 {
   private String _subject;
-  public SlicerTest(String subject)
+  private String _sliceLine;
+  private String _sliceVar;
+  public SlicerTest(String subject, String sliceLine, String sliceVar)
   {
     super();
     _subject = subject;
+    _sliceLine = sliceLine;
+    _sliceVar = sliceVar;
   }
 
   @Parameterized.Parameters
@@ -25,12 +29,12 @@ public class SlicerTest
   {
     return Arrays.asList(new Object[][]
       {
-        { "csci610.cfg.samples.Subject1" },
-        { "csci610.cfg.samples.Subject2" },
-        //{ "Example1" },
-        { "SwitchInt" },
-        //{ "SwitchString" },
-        { "SliceTest" }
+        { "hw.slicing.Program1", "40", "tax" },
+        //{ "hw.slicing.Program1", "31", "cars" },
+        { "hw.slicing.Program2", "40", "b" },
+        //{ "hw.slicing.Program2", "27", "j" },
+        { "Program1", "40", "tax" },
+        //{ "Program1", "31", "cars" },
       }
     );
   }
@@ -47,19 +51,20 @@ public class SlicerTest
     new File("target" + File.separator + "SlicerTestResults").mkdirs();
     EasyLogger.initializeLogger("target" + File.separator
       + "SlicerTestResults" + File.separator + _subject + "TestResults.txt");
-    Slicer.main(initializeSubject(_subject));
+    Slicer.main(initializeSubject(_subject, _sliceLine, _sliceVar));
     assert(true);
   }
 
-  private static String[] initializeSubject(String subject)
+  private static String[] initializeSubject(String subject, String sliceLine,
+    String sliceVar)
   {
     String className = subject;
     String outputName = "target" + File.separator
       + "SlicerTestResults" + File.separator + subject + "Slice.txt";
     String sootClassPath = System.getProperty("user.dir") + File.separator
-      + "src" + File.separator + "test" + File.separator + "resources";
-    String sourceSliceLine = "7";
-    String sourceSliceVariable = "i";
+      + "src" + File.separator + "test" + File.separator + "resources-slicer";
+    String sourceSliceLine = sliceLine;
+    String sourceSliceVariable = sliceVar;
     String pdgFileName = "target" + File.separator
       + "SlicerTestResults" + File.separator + subject + "PDG.dotty";
     String cdFileName = "target" + File.separator

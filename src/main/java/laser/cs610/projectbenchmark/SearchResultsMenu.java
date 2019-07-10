@@ -36,6 +36,7 @@ public class SearchResultsMenu
 
   protected String menuText()
   {
+    // error here. does not consider the situation where search had no results.
     String result = "Please choose an item to view:" + System.lineSeparator();
     int option = 1;
 

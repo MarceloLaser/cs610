@@ -1,5 +1,6 @@
 package laser.datastructures.soot;
 
+import soot.SootMethod;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Collection;
@@ -9,8 +10,11 @@ public class SootNode
 {
   // <editor-fold> FIELDS ******************************************************
   public final int _lineNumber;
+  public final String _name;
+  public final SootMethod _sootMethodPointer;
   public final SootAdvancedControlNode _advancedControlFlow;
   public final SootControlNode _controlFlow;
+  public final SootCallgraphControlNode _callgraphControlFlow;
   public final SootDataNode _dataFlow;
   private List<BoolExpr> _pathCondition;
   // </editor-fold> FIELDS *****************************************************
@@ -18,9 +22,22 @@ public class SootNode
   // <editor-fold> INITIALIZATION **********************************************
   public SootNode(int lineNumber)
   {
+    this(lineNumber, "", null);
+  }
+
+  public SootNode(String name, SootMethod sootMethodPointer)
+  {
+    this(0, name, sootMethodPointer);
+  }
+
+  public SootNode(int lineNumber, String name, SootMethod sootMethodPointer)
+  {
     _lineNumber = lineNumber;
+    _name = name;
+    _sootMethodPointer = sootMethodPointer;
     _advancedControlFlow = new SootAdvancedControlNode();
     _controlFlow = new SootControlNode();
+    _callgraphControlFlow = new SootCallgraphControlNode();
     _dataFlow = new SootDataNode();
     _pathCondition = new LinkedList<BoolExpr>();
   }
