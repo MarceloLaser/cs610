@@ -19,30 +19,37 @@ public class MainMenu
     while(choice < 1 || choice > 6)
       choice = getMenuOption();
 
-    switch(choice)
+    int choiceAux = choice;
+
+    switch(inputTransformer(choiceAux))
     {
-      case 1:
+      case 2:
         return new SearchMenu(_sc, this);
 
-      case 2:
+      case 3:
         return new DepartmentsMenu(_sc, this);
 
-      case 3:
+      case 4:
         return new SearchResultsMenu(_sc, this,
           ConsoleShop._cart.getAllItems());
 
-      case 4:
+      case 5:
         return new ShopInfoScreen(_sc);
 
-      case 5:
+      case 6:
         return new ConcludePurchaseMenu(_sc);
 
-      case 6:
+      case 7:
         return null;
 
       default:
         throw new IllegalArgumentException();
     }
+  }
+
+  protected Integer inputTransformer(int input)
+  {
+    return input++;
   }
 
   protected String menuText()

@@ -43,8 +43,7 @@ public class ViewItemMenu
 
     // this would theoretically return to the itemView screen, but will fail
     // and possibly cause a fatal error because of the errors in 3, 4 and 5.
-    // it's also liable to cause a stack overflow
-    return execute();
+    return this;
   }
 
   protected String menuText()
