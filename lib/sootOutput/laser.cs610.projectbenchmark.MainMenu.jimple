@@ -1,0 +1,258 @@
+public class laser.cs610.projectbenchmark.MainMenu extends laser.cs610.projectbenchmark.ConsoleMenu
+{
+
+    public void <init>(java.util.Scanner)
+    {
+        laser.cs610.projectbenchmark.MainMenu r0;
+        java.util.Scanner r1;
+
+        r0 := @this: laser.cs610.projectbenchmark.MainMenu;
+
+        r1 := @parameter0: java.util.Scanner;
+
+        specialinvoke r0.<laser.cs610.projectbenchmark.ConsoleMenu: void <init>(java.util.Scanner,laser.cs610.projectbenchmark.ConsoleMenu)>(r1, null);
+
+        return;
+    }
+
+    public laser.cs610.projectbenchmark.ConsoleMenu execute()
+    {
+        laser.cs610.projectbenchmark.MainMenu r0;
+        int i0, $i1, $i2, $i3;
+        java.io.PrintStream $r1;
+        java.lang.String $r2;
+        java.lang.Integer $r3, r17;
+        laser.cs610.projectbenchmark.SearchMenu $r4;
+        java.util.Scanner $r5, $r7, $r9, $r12, $r15;
+        laser.cs610.projectbenchmark.ConcludePurchaseMenu $r6;
+        laser.cs610.projectbenchmark.ShopInfoScreen $r8;
+        laser.cs610.projectbenchmark.SearchResultsMenu $r10;
+        laser.cs610.projectbenchmark.Stock $r11;
+        java.util.Map $r13;
+        laser.cs610.projectbenchmark.DepartmentsMenu $r14;
+        java.lang.IllegalArgumentException $r16;
+
+        r0 := @this: laser.cs610.projectbenchmark.MainMenu;
+
+        $r1 = <java.lang.System: java.io.PrintStream out>;
+
+        $r2 = virtualinvoke r0.<laser.cs610.projectbenchmark.MainMenu: java.lang.String menuText()>();
+
+        virtualinvoke $r1.<java.io.PrintStream: void print(java.lang.String)>($r2);
+
+        r17 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(0);
+
+     label01:
+        $i1 = virtualinvoke r17.<java.lang.Integer: int intValue()>();
+
+        if $i1 < 1 goto label02;
+
+        $i2 = virtualinvoke r17.<java.lang.Integer: int intValue()>();
+
+        if $i2 <= 6 goto label03;
+
+     label02:
+        r17 = virtualinvoke r0.<laser.cs610.projectbenchmark.MainMenu: java.lang.Integer getMenuOption()>();
+
+        goto label01;
+
+     label03:
+        i0 = virtualinvoke r17.<java.lang.Integer: int intValue()>();
+
+        $r3 = virtualinvoke r0.<laser.cs610.projectbenchmark.MainMenu: java.lang.Integer inputTransformer(int)>(i0);
+
+        $i3 = virtualinvoke $r3.<java.lang.Integer: int intValue()>();
+
+        tableswitch($i3)
+        {
+            case 2: goto label04;
+            case 3: goto label05;
+            case 4: goto label06;
+            case 5: goto label07;
+            case 6: goto label08;
+            case 7: goto label09;
+            default: goto label10;
+        };
+
+     label04:
+        $r4 = new laser.cs610.projectbenchmark.SearchMenu;
+
+        $r5 = r0.<laser.cs610.projectbenchmark.MainMenu: java.util.Scanner _sc>;
+
+        specialinvoke $r4.<laser.cs610.projectbenchmark.SearchMenu: void <init>(java.util.Scanner,laser.cs610.projectbenchmark.ConsoleMenu)>($r5, r0);
+
+        return $r4;
+
+     label05:
+        $r14 = new laser.cs610.projectbenchmark.DepartmentsMenu;
+
+        $r15 = r0.<laser.cs610.projectbenchmark.MainMenu: java.util.Scanner _sc>;
+
+        specialinvoke $r14.<laser.cs610.projectbenchmark.DepartmentsMenu: void <init>(java.util.Scanner,laser.cs610.projectbenchmark.ConsoleMenu)>($r15, r0);
+
+        return $r14;
+
+     label06:
+        $r10 = new laser.cs610.projectbenchmark.SearchResultsMenu;
+
+        $r12 = r0.<laser.cs610.projectbenchmark.MainMenu: java.util.Scanner _sc>;
+
+        $r11 = <laser.cs610.projectbenchmark.ConsoleShop: laser.cs610.projectbenchmark.Stock _cart>;
+
+        $r13 = virtualinvoke $r11.<laser.cs610.projectbenchmark.Stock: java.util.Map getAllItems()>();
+
+        specialinvoke $r10.<laser.cs610.projectbenchmark.SearchResultsMenu: void <init>(java.util.Scanner,laser.cs610.projectbenchmark.ConsoleMenu,java.util.Map)>($r12, r0, $r13);
+
+        return $r10;
+
+     label07:
+        $r8 = new laser.cs610.projectbenchmark.ShopInfoScreen;
+
+        $r9 = r0.<laser.cs610.projectbenchmark.MainMenu: java.util.Scanner _sc>;
+
+        specialinvoke $r8.<laser.cs610.projectbenchmark.ShopInfoScreen: void <init>(java.util.Scanner)>($r9);
+
+        return $r8;
+
+     label08:
+        $r6 = new laser.cs610.projectbenchmark.ConcludePurchaseMenu;
+
+        $r7 = r0.<laser.cs610.projectbenchmark.MainMenu: java.util.Scanner _sc>;
+
+        specialinvoke $r6.<laser.cs610.projectbenchmark.ConcludePurchaseMenu: void <init>(java.util.Scanner)>($r7);
+
+        return $r6;
+
+     label09:
+        return null;
+
+     label10:
+        $r16 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r16.<java.lang.IllegalArgumentException: void <init>()>();
+
+        throw $r16;
+    }
+
+    protected java.lang.Integer inputTransformer(int)
+    {
+        laser.cs610.projectbenchmark.MainMenu r0;
+        java.lang.Integer $r1;
+        int i0;
+
+        r0 := @this: laser.cs610.projectbenchmark.MainMenu;
+
+        i0 := @parameter0: int;
+
+        $r1 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        return $r1;
+    }
+
+    protected java.lang.String menuText()
+    {
+        laser.cs610.projectbenchmark.MainMenu r0;
+        java.lang.StringBuilder $r1, $r2, $r4, $r5, $r6, $r7, $r9, $r10, $r11, $r12, $r14, $r15, $r16, $r17, $r19, $r20, $r21, $r22, $r24, $r25, $r26, $r27, $r29, $r30, $r31, $r32, $r34;
+        java.lang.String $r3, $r8, $r13, $r18, $r23, $r28, $r33, r35, r36, r37, r38, r39, r40, r41;
+
+        r0 := @this: laser.cs610.projectbenchmark.MainMenu;
+
+        $r1 = new java.lang.StringBuilder;
+
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+
+        $r2 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Please choose an option from the menu:");
+
+        $r3 = staticinvoke <java.lang.System: java.lang.String lineSeparator()>();
+
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+
+        r35 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r5 = new java.lang.StringBuilder;
+
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>()>();
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r35);
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("(1). Search shop");
+
+        $r8 = staticinvoke <java.lang.System: java.lang.String lineSeparator()>();
+
+        $r9 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r8);
+
+        r36 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r10 = new java.lang.StringBuilder;
+
+        specialinvoke $r10.<java.lang.StringBuilder: void <init>()>();
+
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r36);
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("(2). Departments");
+
+        $r13 = staticinvoke <java.lang.System: java.lang.String lineSeparator()>();
+
+        $r14 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r13);
+
+        r37 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r15 = new java.lang.StringBuilder;
+
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>()>();
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r37);
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("(3). Check cart");
+
+        $r18 = staticinvoke <java.lang.System: java.lang.String lineSeparator()>();
+
+        $r19 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r18);
+
+        r38 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r20 = new java.lang.StringBuilder;
+
+        specialinvoke $r20.<java.lang.StringBuilder: void <init>()>();
+
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r38);
+
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("(4). Shop information");
+
+        $r23 = staticinvoke <java.lang.System: java.lang.String lineSeparator()>();
+
+        $r24 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r23);
+
+        r39 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r25 = new java.lang.StringBuilder;
+
+        specialinvoke $r25.<java.lang.StringBuilder: void <init>()>();
+
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r39);
+
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("(5). Conclude purchase");
+
+        $r28 = staticinvoke <java.lang.System: java.lang.String lineSeparator()>();
+
+        $r29 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r28);
+
+        r40 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r30 = new java.lang.StringBuilder;
+
+        specialinvoke $r30.<java.lang.StringBuilder: void <init>()>();
+
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r40);
+
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("(6). Exit shop");
+
+        $r33 = staticinvoke <java.lang.System: java.lang.String lineSeparator()>();
+
+        $r34 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r33);
+
+        r41 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        return r41;
+    }
+}

@@ -8,5 +8,5 @@ package laser.util;
 public class CompilerDirectives
 {
   // Assert true for debugging blocks.
-  public static final boolean DEBUG = true;
+  public static final boolean DEBUG = false;
 }

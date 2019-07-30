@@ -192,6 +192,42 @@
 							<goal>single</goal>
 						</goals>
 					</execution>
+          <execution>
+						<id>make-GoddamnedTest</id>
+            <configuration>
+    					<descriptorRefs>
+    						<descriptorRef>jar-with-dependencies</descriptorRef>
+    					</descriptorRefs>
+              <finalName>cs610-IHateSoot</finalName>
+    					<archive>
+    						<manifest>
+    							<mainClass>laser.soottests.SootIsShit</mainClass>
+    						</manifest>
+    					</archive>
+    				</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+          <execution>
+						<id>make-ProjectBenchmark</id>
+            <configuration>
+    					<descriptorRefs>
+    						<descriptorRef>jar-with-dependencies</descriptorRef>
+    					</descriptorRefs>
+              <finalName>cs610-ProjectBenchmark</finalName>
+    					<archive>
+    						<manifest>
+    							<mainClass>laser.cs610.projectbenchmark.ConsoleShop</mainClass>
+    						</manifest>
+    					</archive>
+    				</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
 				</executions>
 			</plugin>
     </plugins>

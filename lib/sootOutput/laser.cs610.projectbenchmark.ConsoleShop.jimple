@@ -1,0 +1,65 @@
+public class laser.cs610.projectbenchmark.ConsoleShop extends java.lang.Object
+{
+    public static laser.cs610.projectbenchmark.Stock _stock;
+    public static laser.cs610.projectbenchmark.Stock _cart;
+
+    public void <init>()
+    {
+        laser.cs610.projectbenchmark.ConsoleShop r0;
+
+        r0 := @this: laser.cs610.projectbenchmark.ConsoleShop;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] r0;
+        laser.cs610.projectbenchmark.Stock $r2, $r3;
+        java.util.Scanner $r4;
+        java.io.InputStream $r5;
+        laser.cs610.projectbenchmark.MainMenu $r6;
+        java.io.PrintStream $r7;
+        laser.cs610.projectbenchmark.ConsoleMenu r8;
+
+        r0 := @parameter0: java.lang.String[];
+
+        $r2 = staticinvoke <laser.cs610.projectbenchmark.ShopInitializer: laser.cs610.projectbenchmark.Stock makeStock()>();
+
+        <laser.cs610.projectbenchmark.ConsoleShop: laser.cs610.projectbenchmark.Stock _stock> = $r2;
+
+        $r3 = new laser.cs610.projectbenchmark.Stock;
+
+        specialinvoke $r3.<laser.cs610.projectbenchmark.Stock: void <init>()>();
+
+        <laser.cs610.projectbenchmark.ConsoleShop: laser.cs610.projectbenchmark.Stock _cart> = $r3;
+
+        $r4 = new java.util.Scanner;
+
+        $r5 = <java.lang.System: java.io.InputStream in>;
+
+        specialinvoke $r4.<java.util.Scanner: void <init>(java.io.InputStream)>($r5);
+
+        $r6 = new laser.cs610.projectbenchmark.MainMenu;
+
+        specialinvoke $r6.<laser.cs610.projectbenchmark.MainMenu: void <init>(java.util.Scanner)>($r4);
+
+        r8 = $r6;
+
+     label1:
+        if r8 == null goto label2;
+
+        r8 = virtualinvoke r8.<laser.cs610.projectbenchmark.ConsoleMenu: laser.cs610.projectbenchmark.ConsoleMenu execute()>();
+
+        goto label1;
+
+     label2:
+        $r7 = <java.lang.System: java.io.PrintStream out>;
+
+        virtualinvoke $r7.<java.io.PrintStream: void println(java.lang.String)>("Come again!");
+
+        return;
+    }
+}
